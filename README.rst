@@ -1,7 +1,28 @@
 Cova Dispensary POS Audit Tool
 ===================
+.. image:: https://img.shields.io/pypi/v/audit-tools?style=for-the-badge   :alt: PyPI
+
 An inventory audit tool for speeding up inventory and avoiding errors that occur during processing. This tool will allow
 users to complete inventory counts with a simple workflow that remedies user error.
+
+
+Installation and Usage
+-----
+.. code-block:: bash
+
+    $ pypi install audit-tools
+
+
+.. code-block:: python
+
+    >>> from audit_tools import SessionManager
+    >>> session = SessionManager('/path/to/products.csv')
+    ...
+    >>> session.count_product('F7X6A7', 20)
+    >>> session.reduce_product('F7X6A7', 3)
+    ...
+    >>> session.shutdown()
+
 
 Problems
 --------

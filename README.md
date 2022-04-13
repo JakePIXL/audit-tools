@@ -7,18 +7,22 @@ users to complete inventory counts with a simple workflow that remedies user err
 
 Installation and Usage
 -----
-``` bash
+```bash
 $ pypi install audit-tools
 ```
 
-``` pyhton
-    >>> from audit_tools import SessionManager
-    >>> session = SessionManager('/path/to/products.csv')
-    ...
-    >>> session.count_product('F7X6A7', 20)
-    >>> session.reduce_product('F7X6A7', 3)
-    ...
-    >>> session.shutdown()
+```python
+from audit_tools.core import SessionManager
+session = SessionManager('/path/to/products.csv')
+
+...
+
+session.count_product('F7X6A7', 20)
+session.reduce_product('F7X6A7', 3)
+
+...
+
+session.shutdown()
 ```
 
 

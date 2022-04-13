@@ -1,16 +1,10 @@
 import pytest
-
-from audit_tools import __version__
 from audit_tools.core import SessionManager
 
 
 @pytest.fixture()
 def session():
     return SessionManager('new_products_converted.csv')
-
-
-def test_version():
-    assert __version__ == '0.1.1'
 
 
 def test_session_manager(session):

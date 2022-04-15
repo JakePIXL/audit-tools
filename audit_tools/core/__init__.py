@@ -1,5 +1,6 @@
 import json
 import sys
+from typing import Optional
 
 import pandas as pd
 
@@ -150,17 +151,24 @@ class SessionManager:
                     verify_integrity=True
                 )
 
-    def shutdown(self):
+    def shutdown(self, file_folder: Optional[str] = None):
+        """
+        Shuts down the session and saves the data to a file
+
+        :param file_folder: When provided the file will be saved to the given folder
+        """
         self.logger.info("Shutting down session manager")
-        self.parse_session_data()
 
         if self.variance_counter > 0:
             print(f"{self.variance_counter} products have a variance!")
             print(self.variance_items)
             self.logger.info(f"{self.variance_counter} items have a variance")
+            prods_to_exp = self.variance_items
+        else:
+            prods_to_exp = self.products
 
         try:
-            file_name = export_file(self.file_type, None, self.variance_items)
+            file_name = export_file(self.file_type, file_folder, prods_to_exp)
             print(f"Exported to: {file_name}")
             sys.exit()
         except SessionException as e:

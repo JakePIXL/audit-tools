@@ -16,18 +16,31 @@ $ pypi install audit-tools
 from audit_tools import SessionManager, Scanner
 
 session = SessionManager('/path/to/products.csv') # Path to products.csv
-scanner = Scanner(session) # Create a scanner object
 
 ...
 
-session.count_product('F7X6A7', 20) # Add 20 of F7X6A7 to the inventory
-session.reduce_product('F7X6A7', 3) # Reduce 3 of F7X6A7 from the inventory
+session.count_product('F7X6A7', 20) # Counts 20 F7X6A7's to the inventory
+session.increase_product('F7X6A7', 10) # Increases F7X6A7 to 30 in the inventory
+session.reduce_product('F7X6A7', 3) # Reduces F7X6A7 to 27 in the inventory
+
+print(session.get_product('F7X6A7')) # Returns the row of product with SKU 'F7X6A7'
 
 ...
 
-scanner.start_count() # Starts a text based loop for counting products
+session.parse_session_data() # Updates session dataframes with accurate content
 
-session.shutdown() # Parses session data and saves the session to a file
+session.shutdown() # Saves session data to disk
+
+...
+
+# Usage of the scanner is discouraged as it is not thread safe or efficient
+# Scanner is mostly for testing purposes
+
+scanner = Scanner(session) # Creates a scanner object
+
+scanner.start_count() # Starts the count process
+
+scanner.shutdown() # processes and saves session data to disk
 ```
 
 

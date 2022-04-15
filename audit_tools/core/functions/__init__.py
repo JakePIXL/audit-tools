@@ -1,6 +1,7 @@
 import os
 
-from audit_tools.core.functions.logger import Logger
+from audit_tools.core.functions.file_manager import *
+from audit_tools.core.functions.logger import *
 
 
 def clear():

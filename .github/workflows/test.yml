@@ -44,7 +44,7 @@ jobs:
       
         
     - name: Run pytest
-      run: PYTHONPATH=src/ poetry run python -m pytest -v --cov tests/
+      run: PYTHONPATH=src/ poetry run python -m pytest
 
     - name: Run Coverage
       run: PYTHONPATH=src/ poetry run python -m coverage report -m;

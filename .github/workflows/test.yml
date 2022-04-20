@@ -1,0 +1,53 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python package
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+        
+    - name: Setup Poetry
+      # You may pin to the exact commit or the version.
+      # uses: Gr1N/setup-poetry@09236184f6c1ab47c0dc9c1001c7fe200cf2afb0
+      uses: Gr1N/setup-poetry@v7
+      
+    - name: Cache Poetry virtualenv
+      uses: actions/cache@v3.0.2
+      id: cache
+      with:
+        path: ~/.virtualenvs
+        key: poetry-$
+        restore-keys: |
+          poetry-$
+    - name: Install Dependencies using Poetry
+      run: poetry install
+      if: steps.cache.outputs.cache-hit != 'true'
+      
+        
+    - name: Run pytest
+      run: PYTHONPATH=src/ poetry run python -m pytest -v --cov=src/ tests/
+
+    - name: Run Coverage
+      run: PYTHONPATH=src/ poetry run python -m coverage report -m;
+
+    - name: Generate XML Report
+      run: PYTHONPATH=src/ poetry run python -m coverage xml

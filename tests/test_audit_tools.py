@@ -5,7 +5,7 @@ from audit_tools.core.functions import export_file, import_file
 
 @pytest.fixture()
 def session():
-    return SessionManager('new_products_converted.csv')
+    return SessionManager('test_file.csv')
 
 
 def test_session_manager(session):
@@ -18,7 +18,7 @@ def test_session_manager(session):
 
 
 def test_file_manager(session):
-    assert import_file(file_path='new_products_converted.csv') is not None
+    assert import_file(file_path='test_file.csv') is not None
     assert export_file(session.file_type, None, session.products) is not None
 
 

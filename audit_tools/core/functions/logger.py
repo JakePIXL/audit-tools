@@ -4,7 +4,7 @@ import pytz
 import os
 
 date_time = datetime.now(pytz.timezone('US/Eastern'))
-date = date_time.strftime("%m-%d-%Y-%H-%M")
+date = date_time.strftime("%m-%d-%Y-%H")
 
 logs_folder = os.path.isdir('logs')
 if not logs_folder:
@@ -12,7 +12,7 @@ if not logs_folder:
 
 logging.basicConfig(
     filename=f"./logs/audit-tool-{date}.log",
-    format="%(asctime)s %(message)s",
+    format=' %(asctime)s :: %(levelname)s :: %(message)s',
     filemode='w'
 )
 

@@ -1,11 +1,11 @@
-import json
 import sys
 from typing import Optional
 
 import pandas as pd
+from rich.table import Table
 
 from audit_tools.core.errors import SessionException
-from audit_tools.core.functions import clear, get_logger, import_file, export_file
+from audit_tools.core.functions import clear, get_logger, import_file, export_file, to_table
 
 columns_main = ["Product Name", "Product Classification", "In Stock", "Counted", "Variance", "Notes", "SKU"]
 
@@ -14,27 +14,28 @@ columns_main = ["Product Name", "Product Classification", "In Stock", "Counted",
 # Allows the application to store products to allow for updates to information
 #
 class SessionManager:
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: str, debug: bool = False):
         self.variance_counter = 0
         self.missed_counter = 0
-        self.is_counting = False
         self.logger = get_logger()
-        self.logger.setLevel("DEBUG")
+        if debug:
+            self.logger.setLevel("DEBUG")
+
         self.logger.info("Session Manager initialized")
 
         # Creates a DataFrame based on the Product model
-        self.logger.info("------Creating DataFrame------")
+        self.logger.info("Creating DataFrame")
 
         try:
             self.products, self.file_type = import_file(file_path)
         except SessionException as e:
-            self.logger.error(e)
+            self.logger.exception(e)
+            sys.exit(1)
 
         self.variance_items = self.products[0:0]
         self.missed_items = self.products[0:0]
-        self.logger.info("Creating alternative data structures")
 
-        self.logger.info("------DataFrame Created------")
+        self.logger.info("Creating alternative data structures")
 
     # Update a products count via user input
     def count_product(self, sku: str, count: int = 0):
@@ -126,11 +127,30 @@ class SessionManager:
 
         return prod.all
 
+    def get_table_data(self, products: pd.DataFrame = None) -> Optional[Table or str]:
+        """
+        Returns a Table object with the products in the session and their counts, if no DataFrame is given it will use
+        the products DataFrame from the session.
+
+        """
+
+        if products is None:
+            products = self.products
+
+        if products.empty:
+            self.logger.error("No products found in session")
+            return "No products found in session"
+
+        table = Table(show_header=True, header_style="bold magenta")
+        table = to_table(products, table)
+
+        return table
+
     def parse_session_data(self):
         for index, row in self.products.iterrows():
             variance = row["Counted"] - row["In Stock"]
             self.products.loc[index, "Variance"] = variance
-            self.products.loc[index, "Notes"] = f"{row['Notes']} Variance caught by A.T." if row["Notes"] else "Variance caught by A.T."
+            self.products.loc[index, "Notes"] = f"Variance caught by A.T."
             if variance > 0:
                 self.variance_counter += 1
                 self.variance_items = pd.concat([

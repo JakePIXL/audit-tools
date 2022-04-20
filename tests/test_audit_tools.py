@@ -1,4 +1,5 @@
 import pytest
+
 from audit_tools import SessionManager
 from audit_tools.core.functions import export_file, import_file
 
@@ -22,3 +23,6 @@ def test_file_manager(session):
     assert export_file(session.file_type, None, session.products) is not None
 
 
+def test_tables(session):
+    session.parse_session_data()
+    assert session.get_table_data().columns

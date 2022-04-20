@@ -45,9 +45,3 @@ jobs:
         
     - name: Run pytest
       run: PYTHONPATH=src/ poetry run python -m pytest
-
-    - name: Run Coverage
-      run: PYTHONPATH=src/ poetry run python -m coverage report -m;
-
-    - name: Generate XML Report
-      run: PYTHONPATH=src/ poetry run python -m coverage xml

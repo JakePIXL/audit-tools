@@ -34,10 +34,11 @@ jobs:
       uses: actions/cache@v3.0.2
       id: cache
       with:
-        path: ~/.virtualenvs
+        path: ~/.virtualenv
         key: poetry-$
         restore-keys: |
           poetry-$
+          
     - name: Install Dependencies using Poetry
       run: poetry install
       if: steps.cache.outputs.cache-hit != 'true'

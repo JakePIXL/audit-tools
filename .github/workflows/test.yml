@@ -29,15 +29,7 @@ jobs:
       # You may pin to the exact commit or the version.
       # uses: Gr1N/setup-poetry@09236184f6c1ab47c0dc9c1001c7fe200cf2afb0
       uses: Gr1N/setup-poetry@v7
-      
-    - name: Cache Poetry virtualenv
-      uses: actions/cache@v3.0.2
-      id: cache
-      with:
-        path: ~/.virtualenv
-        key: poetry-$
-        restore-keys: |
-          poetry-$
+
           
     - name: Install Dependencies using Poetry
       run: poetry install

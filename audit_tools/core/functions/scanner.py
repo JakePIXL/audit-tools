@@ -1,11 +1,13 @@
+import sys
+
 from rich.prompt import Prompt, Confirm
 from rich import print
 
-from audit_tools.core import SessionManager, clear, SessionException, export_file
+from audit_tools.core import Session, clear, SessionException, export_file
 
 
 class Scanner:
-    def __init__(self, session: SessionManager):
+    def __init__(self, session: Session):
         self.session = session
 
     # Create run event
@@ -68,6 +70,7 @@ class Scanner:
         try:
             file_name = export_file(self.session.file_type, None, self.session.variance_items)
             print(f"> [bold]Exported to [green]{file_name}")
+            sys.exit(1)
         except SessionException as e:
             self.session.logger.error(e)
             print(f"> [bold red]{e}")

@@ -10,32 +10,37 @@ from audit_tools.core.functions import clear, get_logger, import_file, export_fi
 columns_main = ["Product Name", "Product Classification", "In Stock", "Counted", "Variance", "Notes", "SKU"]
 
 
-# Session Manager
-# Allows the application to store products to allow for updates to information
-#
-class SessionManager:
-    def __init__(self, file_path: str, debug: bool = False):
+class Session:
+    def __init__(self, file_path: Optional[str] = None):
         self.variance_counter = 0
         self.missed_counter = 0
         self.logger = get_logger()
-        if debug:
-            self.logger.setLevel("DEBUG")
 
-        self.logger.info("Session Manager initialized")
+        self.logger.info("Session initialized")
 
         # Creates a DataFrame based on the Product model
         self.logger.info("Creating DataFrame")
 
-        try:
-            self.products, self.file_type = import_file(file_path)
-        except SessionException as e:
-            self.logger.exception(e)
-            sys.exit(1)
+        if file_path:
+            try:
+                self.products, self.file_type = import_file(file_path)
+            except SessionException as e:
+                self.logger.exception(e)
+                sys.exit(1)
+        else:
+            self.products = pd.DataFrame(columns=columns_main)
+            self.file_type = None
 
         self.variance_items = self.products[0:0]
         self.missed_items = self.products[0:0]
 
         self.logger.info("Creating alternative data structures")
+
+    def import_data(self, file_path: str):
+        try:
+            self.products, self.file_type = import_file(file_path)
+        except SessionException as e:
+            self.logger.exception(e)
 
     # Update a products count via user input
     def count_product(self, sku: str, count: int = 0):
@@ -190,6 +195,30 @@ class SessionManager:
         try:
             file_name = export_file(self.file_type, file_folder, prods_to_exp)
             print(f"Exported to: {file_name}")
-            sys.exit()
+
         except SessionException as e:
             self.logger.error(e)
+
+
+# Session Manager
+# Allows the application to store products, alter products, and gracefully exit
+#
+class SessionManager:
+    def __init__(self, file_path: Optional[str] = None, testing: bool = False):
+        self.file_path = file_path
+        self.session = None
+        self.testing = testing
+
+    def __enter__(self) -> Session:
+        if self.file_path:
+            self.session = Session(self.file_path)
+        else:
+            self.session = Session()
+        return self.session
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.session.products.empty:
+            self.session.logger.error("No products found in session")
+        else:
+            if not self.testing:
+                self.session.shutdown(self.file_path)

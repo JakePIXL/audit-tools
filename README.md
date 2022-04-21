@@ -14,7 +14,7 @@ $ pypi install audit-tools
 ```
 
 ```python
-from audit_tools import SessionManager, Scanner
+from audit_tools import SessionManager
 
 with SessionManager() as session: # invokes the session manager
   

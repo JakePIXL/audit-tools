@@ -1,17 +1,20 @@
 import os
-import sys
 from typing import Optional
 
 import pandas as pd
 import datetime
 
-from audit_tools.core import SessionException
+from audit_tools.core.errors import SessionException
 
 
-def export_file(file_type: str, folder_path: Optional[str], file: pd.DataFrame) -> Optional[str]:
+def export_file(file_type: str, folder_path: Optional[str], file: pd.DataFrame, testing: bool = False) -> Optional[str]:
     """
     Export a file to the current or specified directory.
     """
+
+    if file.empty:
+        raise SessionException("Invalid file type!")
+
     date_time = datetime.datetime.now().strftime("%Y-%m-%d")
     file_name = f"audit-{date_time}.{file_type}"
 
@@ -21,17 +24,18 @@ def export_file(file_type: str, folder_path: Optional[str], file: pd.DataFrame) 
         else:
             raise SessionException("Invalid file path!")
 
-    if file_type == "csv":
-        file.to_csv(file_name, index=False)
+    if not testing:
+        if file_type == "csv":
+            file.to_csv(file_name, index=False, header=True)
 
-    elif file_type == "xlsx":
-        file.to_excel(file_name, index=False)
+        elif file_type == "xlsx":
+            file.to_excel(file_name, index=False, header=True)
 
-    elif file_type == "json":
-        file.to_json(file_name, orient="records")
+        elif file_type == "json":
+            file.to_json(file_name, orient="records")
 
-    else:
-        raise SessionException("Invalid file type!")
+        else:
+            raise SessionException("Invalid file type!")
 
     return file_name
 

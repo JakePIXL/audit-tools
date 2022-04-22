@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "audit-tools"
-version = "0.1.7"
+version = "0.1.8"
 description = "Auditing tools for Cova POS files"
 readme = "README.md"
 repository = "https://github.com/JakePIXL/audit-tools"

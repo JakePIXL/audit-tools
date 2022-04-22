@@ -1,7 +1,8 @@
 # Cova Dispensary POS Audit Tools
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/audit-tools)
 [![PyPI](https://img.shields.io/pypi/v/audit-tools)](https://pypi.org/project/audit-tools/)
-[![Python package](https://github.com/JakePIXL/audit-tools/actions/workflows/test.yml/badge.svg)](https://github.com/JakePIXL/audit-tools/actions/workflows/test.yml)
+[![Python testing](https://github.com/JakePIXL/audit-tools/actions/workflows/test.yml/badge.svg)](https://github.com/JakePIXL/audit-tools/actions/workflows/test.yml)
+[![Python package](https://github.com/JakePIXL/audit-tools/actions/workflows/python-package.yml/badge.svg)](https://github.com/JakePIXL/audit-tools/actions/workflows/python-package.yml)
 
 An inventory audit tool for speeding up inventory and avoiding errors that occur during processing. This tool will allow
 users to complete inventory counts with a simple workflow that remedies user error.
@@ -14,20 +15,19 @@ $ pypi install audit-tools
 ```
 
 ```python
-from audit_tools import SessionManager
+from audit_tools.sessionmanager import SessionManager
 
-with SessionManager() as session: # invokes the session manager
-  
-    session.import_data("/path/to/file.xlsx") # imports data from an excel, json or csv file
-    
-    
-    session.count_product('F7X6A7', 20) # Counts 20 F7X6A7's to the inventory
-    session.increase_product('F7X6A7', 10) # Increases F7X6A7 to 30 in the inventory
-    session.reduce_product('F7X6A7', 3) # Reduces F7X6A7 to 27 in the inventory
-    
-    print(session.get_product('F7X6A7')) # Returns the row of product with SKU 'F7X6A7'
-    
-    session.parse_session_data() # Updates session dataframes with accurate content
+with SessionManager() as session:  # invokes the session manager
+
+  session.import_data("/path/to/file.xlsx")  # imports data from an excel, json or csv file
+
+  session.count_product('F7X6A7', 20)  # Counts 20 F7X6A7's to the inventory
+  session.increase_product('F7X6A7', 10)  # Increases F7X6A7 to 30 in the inventory
+  session.reduce_product('F7X6A7', 3)  # Reduces F7X6A7 to 27 in the inventory
+
+  print(session.get_product('F7X6A7'))  # Returns the row of product with SKU 'F7X6A7'
+
+  session.parse_session_data()  # Updates session dataframes with accurate content
 
 ```
 
@@ -39,36 +39,31 @@ called or when the `import_data()` method is called.
 
 Testing - will make sure that there is no output file
 
-
-
-
 ```python
-from audit_tools import SessionManager
+from audit_tools.sessionmanager import SessionManager
 
 with SessionManager('/path/to/file.xlsx', testing=True) as session:
-  
-    session.import_data('/path/to/file.xlsx')
+  session.import_data('/path/to/file.xlsx')
 ```
 
 Scanner
 -------
 Not working on it, do not use just there for testing and proof of concept
 
-
 ```python
-from audit_tools import SessionManager, Scanner
+from audit_tools.sessionmanager import SessionManager
+from audit_tools.core.functions.scanner import Scanner
 
 with SessionManager('/path/to/file.xlsx') as session:
-  
-    # Usage of the scanner is discouraged as it is not thread safe or efficient
-    # Scanner is mostly for testing purposes
-    # I do not update the code often in the scanner
-    
-    scanner = Scanner(session) # Creates a scanner object
-    
-    scanner.start_count() # Starts the count process
-    
-    scanner.shutdown() # processes and saves session data to disk
+  # Usage of the scanner is discouraged as it is not thread safe or efficient
+  # Scanner is mostly for testing purposes
+  # I do not update the code often in the scanner
+
+  scanner = Scanner(session)  # Creates a scanner object
+
+  scanner.start_count()  # Starts the count process
+
+  scanner.shutdown()  # processes and saves session data to disk
 ```
 
 

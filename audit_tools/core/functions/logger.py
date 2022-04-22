@@ -12,8 +12,8 @@ def get_logger():
     stream_handler = logging.StreamHandler(stream=sys.stdout)
     stream_handler.setLevel(logging.INFO)
 
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)s - %(message)s' + '(%(filename)s:%(lineno)s)',
-                                  datefmt='%Y-%m-%d %H:%M:%S')
+    formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s | (%(filename)s:%(lineno)s) |\n',
+                                  datefmt='%Y-%m-%d | %H:%M:%S')
 
     file_handler.setFormatter(formatter)
     stream_handler.setFormatter(formatter)

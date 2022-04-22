@@ -44,8 +44,13 @@ def to_table(
     for index, value_list in enumerate(pandas_dataframe.values.tolist()):
         row = [str(index)] if show_index else []
 
-        if int(value_list[4]) > 0 or int(value_list[4]) < 0:
-            value_list[4] = f"[bold red]{value_list[4]}"
+        variance_index = pandas_dataframe.columns.get_loc("Variance")
+        if variance_index is not None:
+            try:
+                if int(value_list[4]) >= 1 or int(value_list[4]) <= -1:
+                    value_list[4] = f"[bold red]{value_list[4]}"
+            except ValueError:
+                pass
 
         row += [str(x) for x in value_list]
 

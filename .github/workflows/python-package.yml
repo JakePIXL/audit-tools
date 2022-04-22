@@ -1,11 +1,12 @@
 name: Python package
 on:
   workflow_run:
-    workflows: ["Build"]
-    types:
-      - completed
+    workflows:
+      - Testing
     branches:
       - master
+    types:
+      - completed
 
 jobs:
   build:

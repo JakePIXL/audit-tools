@@ -1,10 +1,15 @@
 name: Python package
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
+    branches:
+      - master
+
 jobs:
   build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

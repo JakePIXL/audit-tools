@@ -5,17 +5,9 @@ name: Testing
 
 on:
   push:
-    branches: [ master ]
-    paths-ignore:
-      - '**/README.md'
     tags:
-      - 'v*.*.*'
-  pull_request:
-    branches: [ master ]
-    paths-ignore:
-      - '**/README.md'
-    tags:
-      - 'v*.*.*'
+      - "v*.*.*"
+
 
 jobs:
   build:

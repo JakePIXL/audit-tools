@@ -58,7 +58,7 @@ class Scanner:
         self.start_count()
 
     def shutdown(self):
-        self.session.logger.info("Scanner: Shutting down...")
+        self.session.logger.info("Scanner is shutting down...")
 
         self.session.parse_session_data()
 

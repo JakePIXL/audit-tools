@@ -4,7 +4,7 @@ from rich.prompt import Prompt, Confirm
 from rich import print
 
 from audit_tools.core.errors import SessionException
-from audit_tools.core.functions import clear
+from audit_tools.core.utils import clear
 from audit_tools.core.session import Session
 
 

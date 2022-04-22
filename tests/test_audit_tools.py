@@ -1,7 +1,7 @@
 import pytest
 
 from audit_tools.sessionmanager import SessionManager
-from audit_tools.core.functions import export_file, import_file
+from audit_tools.core.utils import export_file, import_file
 
 
 def test_session_manager():

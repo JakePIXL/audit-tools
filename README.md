@@ -52,7 +52,7 @@ Not working on it, do not use just there for testing and proof of concept
 
 ```python
 from audit_tools.sessionmanager import SessionManager
-from audit_tools.core.functions.scanner import Scanner
+from audit_tools.core.utils.scanner import Scanner
 
 with SessionManager('/path/to/file.xlsx') as session:
   # Usage of the scanner is discouraged as it is not thread safe or efficient

@@ -4,8 +4,8 @@ from typing import Optional
 import pandas as pd
 from rich.table import Table
 
-from audit_tools.core.functions.file_manager import import_file, export_file
-from audit_tools.core.functions.logger import get_logger
+from audit_tools.core.utils.file_manager import import_file, export_file
+from audit_tools.core.utils.logger import get_logger
 
 
 def clear():

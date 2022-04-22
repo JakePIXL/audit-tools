@@ -5,7 +5,7 @@ import pandas as pd
 from rich.table import Table
 
 from audit_tools.core.errors import SessionException
-from audit_tools.core.functions import get_logger, import_file, export_file, to_table
+from audit_tools.core.utils import get_logger, import_file, export_file, to_table
 
 columns_main = ["Counted", "Variance"]
 
@@ -65,10 +65,7 @@ class Session:
     # Update a products count via user input
     def count_product(self, sku: str, count: int = 0):
 
-        exists = self.get_product(sku)
-
-        if exists:
-            self.logger.info(f"Setting product count: {sku} to {count}")
+        if self.get_product(sku):
 
             # Grab the product pertaining to the SKU
             try:
@@ -77,6 +74,8 @@ class Session:
                 self.logger.error(f"Product: {sku} not found")
                 self.logger.error(e)
                 return False
+
+            self.logger.info(f"Setting product count: {sku} to {count}")
 
             # Set the products count to the updated count
             self.products.loc[prod, "Counted"] = count
@@ -87,10 +86,8 @@ class Session:
             raise SessionException(f"Product: {sku} not found")
 
     def increase_product(self, sku: str, count: int = 0):
-        exists = self.get_product(sku)
 
-        if exists:
-            self.logger.info(f"Increasing product count: {sku} by {count}")
+        if self.get_product(sku):
 
             # Grab the product pertaining to the SKU
             try:
@@ -101,6 +98,8 @@ class Session:
                 return False
 
             counted = self.products["Counted"].iloc[prod[0]]
+
+            self.logger.info(f"Increasing product count: {sku} by {count}")
 
             # Set the products count to the updated count
             self.products.loc[prod, "Counted"] = count + counted
@@ -112,10 +111,9 @@ class Session:
 
     # Update the products count via receipt input
     def reduce_product(self, sku: str, count: int = 0):
-        exists = self.get_product(sku)
 
-        if exists:
-            self.logger.info(f"Reducing product count: {sku} by {count}")
+        if self.get_product(sku):
+
             # Grabs the product pertaining to the SKU
             try:
                 prod = self.products.index[self.products.select_dtypes(object).eq(sku).any(1)]
@@ -126,6 +124,8 @@ class Session:
 
             counted = self.products["Counted"].iloc[prod[0]]
 
+            self.logger.info(f"Reducing product count: {sku} by {count}")
+
             # Sets the products count to the updated count
             self.products.loc[prod, "Counted"] = counted - count
 
@@ -134,22 +134,13 @@ class Session:
             self.logger.error(f"Product: {sku} not found")
             raise SessionException(f"Product: {sku} not found")
 
-    def remove_product(self, sku: str):
-        """
-        SHOULD NOT BE USED! Removes a product from the session
-
-        """
-        self.products = self.products[~self.products.select_dtypes(str).eq(sku).any(1)]
-
     def get_product(self, sku: str):
         self.logger.info(f"Getting product: {sku}")
 
         prod = self.products[self.products['SKU'] == sku]
-        self.logger.info(f"Product: {sku} found")
 
         if prod.empty:
-            self.logger.error(f"Product: {sku} not found")
-            raise SessionException(f"Product: {sku} not found")
+            return None
 
         return prod.all
 

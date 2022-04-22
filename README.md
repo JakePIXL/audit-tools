@@ -1,7 +1,7 @@
 # Cova Dispensary POS Audit Tools
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/audit-tools)
 [![PyPI](https://img.shields.io/pypi/v/audit-tools)](https://pypi.org/project/audit-tools/)
-[![Python testing](https://github.com/JakePIXL/audit-tools/actions/workflows/test.yml/badge.svg)](https://github.com/JakePIXL/audit-tools/actions/workflows/test.yml)
+[![Testing](https://github.com/JakePIXL/audit-tools/actions/workflows/test.yml/badge.svg)](https://github.com/JakePIXL/audit-tools/actions/workflows/test.yml)
 [![Python package](https://github.com/JakePIXL/audit-tools/actions/workflows/python-package.yml/badge.svg)](https://github.com/JakePIXL/audit-tools/actions/workflows/python-package.yml)
 
 An inventory audit tool for speeding up inventory and avoiding errors that occur during processing. This tool will allow

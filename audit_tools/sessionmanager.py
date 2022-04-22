@@ -1,18 +1,17 @@
-# Session Manager
-# Allows the application to store products, alter products, and gracefully exit
-#
 from typing import Optional
 
 from audit_tools.core.session import Session
 
 
 class SessionManager:
-    def __init__(self, file_path: Optional[str] = None, testing: bool = False):
+    def __init__(self, file_path: Optional[str] = None, folder_path: Optional[str] = None, testing: bool = False):
         self.file_path = file_path
+        self.folder_path = folder_path
         self.session = None
         self.testing = testing
 
     def __enter__(self) -> Session:
+
         if self.file_path:
             self.session = Session(self.file_path)
         else:
@@ -24,4 +23,4 @@ class SessionManager:
             self.session.logger.error("No products found in session")
         else:
             if not self.testing:
-                self.session.shutdown(self.file_path)
+                self.session.shutdown(self.folder_path)

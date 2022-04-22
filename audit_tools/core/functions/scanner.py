@@ -4,7 +4,7 @@ from rich.prompt import Prompt, Confirm
 from rich import print
 
 from audit_tools.core.errors import SessionException
-from audit_tools.core.functions import clear, export_file
+from audit_tools.core.functions import clear
 from audit_tools.core.session import Session
 
 
@@ -51,20 +51,23 @@ class Scanner:
                         self.session.logger.error("Scanner: Invalid count")
                         continue
 
-    def count_missed(self):
-        self.session.logger.info("Scanner: Counting missed products...")
-        print(f"> [bold orange]You may have missed items!")
-        print(self.session.missed_items)
-        self.start_count()
-
     def shutdown(self):
         self.session.logger.info("Scanner is shutting down...")
 
         self.session.parse_session_data()
 
         while self.session.missed_counter > 0:
-            user_input = Confirm.ask("> [bold orange]Would you like to count missed items?", default=True)
-            if user_input:
-                self.count_missed()
+            self.session.logger.warning(f"[bold orange] {self.session.missed_counter} missed products...")
+            print(f"> [bold orange]You may have missed items!")
+            print(self.session.get_table_data(self.session.missed_items))
+            answer = Confirm.ask("> [bold orange]Would you like to count them?", default=True)
+            if answer:
+                self.start_count()
             else:
                 break
+
+        if self.session.variance_counter > 0:
+            print(self.session.get_table_data(self.session.variance_items))
+
+            _ = Prompt.ask("Press enter to exit...")
+

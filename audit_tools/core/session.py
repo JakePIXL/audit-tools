@@ -174,7 +174,7 @@ class Session:
 
     def parse_session_data(self):
         for index, row in self.products.iterrows():
-            variance = row["In Stock"] - row["Counted"]
+            variance = row["Counted"] - row["In Stock"]
             self.products.loc[index, "Variance"] = variance
             self.products.loc[index, "Notes"] = f"Variance caught by A.T."
             if variance > 0 or variance < 0:

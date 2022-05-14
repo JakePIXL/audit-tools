@@ -105,14 +105,14 @@ This list will include all the features, current and future.
 
 |    Features     | Working Status |
 |:---------------:|:--------------:|
-| Session Manager | In Development |
-|  Scan & Count   |    Planned     |
+| Session Manager |    Working*    |
+|  Scan & Count   | In Development |
 |   Scan & Edit   |    Planned     |
 | Receipt Parser  |    Planned     |
 
 
 
-Dev notes:
+**Dev notes:**
 If you come across this project, I am a newish developer, and I am not familiar with the 
 python ecosystem especially poetry. If you are confused on the namings in this project, keep in mind
 this package was created for a sole reason to help the creator at work, and will be used in tandem with

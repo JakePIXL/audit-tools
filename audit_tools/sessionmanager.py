@@ -12,6 +12,8 @@ class SessionManager:
         self.folder_path = folder_path
         self.session = None
         self.testing = testing
+        if testing:
+            log.warning("SessionManager initialized in testing mode")
 
     def __enter__(self) -> Session:
 
@@ -26,4 +28,5 @@ class SessionManager:
             log.error("No products found in session")
         else:
             if not self.testing:
+                log.info("Exiting and saving session to disk")
                 self.session.shutdown(self.folder_path)

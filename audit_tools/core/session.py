@@ -5,7 +5,8 @@ import pandas as pd
 from rich.table import Table
 
 from audit_tools.core.errors import SessionException
-from audit_tools.core.utils import get_logger, import_file, export_file, to_table
+from audit_tools.core.utils import get_logger, import_file, export_file
+from audit_tools.core.utils.converters import dataframe_to_rich_table
 
 columns_main = ["Counted", "Variance"]
 
@@ -154,7 +155,7 @@ class Session:
             return "No products found in session"
 
         table = Table(show_header=True, header_style="bold magenta")
-        table = to_table(table_data, table)
+        table = dataframe_to_rich_table(table_data, table)
 
         return table
 
@@ -189,7 +190,6 @@ class Session:
 
         :param file_folder: When provided the file will be saved to the given folder
         """
-        self.logger.info("Shutting down session manager")
 
         if self.variance_counter >= 1:
             print(f"{self.variance_counter} products have a variance!")

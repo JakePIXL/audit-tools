@@ -32,6 +32,8 @@ def export_file(file_type: str, folder_path: Optional[str], file: pd.DataFrame, 
     if not testing:
         log.info(f"Exporting file to {file_name}")
 
+        log.info(f"Checking file_type and exporting accordingly...")
+
         if file_type == "csv":
             file.to_csv(file_name, index=False, header=True)
 
@@ -44,6 +46,7 @@ def export_file(file_type: str, folder_path: Optional[str], file: pd.DataFrame, 
         else:
             raise SessionException("Invalid file type!")
 
+        log.info(f"File exported to {file_name}")
         return file_name
     else:
         log.warning(f"Testing: true - not exporting file to {file_name}")

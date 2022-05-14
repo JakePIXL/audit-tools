@@ -6,7 +6,7 @@ from audit_tools.core.utils import export_file, import_file
 
 def test_session_manager():
 
-    with SessionManager(testing=False) as session:
+    with SessionManager(testing=True) as session:
         assert session is not None
 
         session.import_data("test_file.csv")
@@ -17,6 +17,7 @@ def test_session_manager():
         assert session.increase_product("29XPSPS8", 10)
         assert session.reduce_product("29XPSPS8", 3)
         assert session.get_product("29XPSPS8") is not None
+        assert session.get_product("444cd") is None
 
         session.parse_session_data()
 

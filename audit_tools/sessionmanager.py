@@ -1,6 +1,9 @@
+import logging
 from typing import Optional
 
 from audit_tools.core.session import Session
+
+log = logging.getLogger('audit_tools')
 
 
 class SessionManager:
@@ -20,7 +23,7 @@ class SessionManager:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.session.products.empty:
-            self.session.logger.error("No products found in session")
+            log.error("No products found in session")
         else:
             if not self.testing:
                 self.session.shutdown(self.folder_path)

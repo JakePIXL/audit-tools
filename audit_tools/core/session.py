@@ -105,9 +105,6 @@ class Session:
             self.products.loc[prod, "Counted"] = count + counted
 
             return True
-        else:
-            self.logger.error(f"Product: {sku} not found")
-            raise SessionException(f"Product: {sku} not found")
 
     # Update the products count via receipt input
     def reduce_product(self, sku: str, count: int = 0):
@@ -119,7 +116,7 @@ class Session:
                 prod = self.products.index[self.products.select_dtypes(object).eq(sku).any(1)]
             except pd.errors.InvalidIndexError as e:
                 self.logger.error(f"Product: {sku} not found")
-                self.logger.error(e)
+                self.logger.exception(e)
                 return
 
             counted = self.products["Counted"].iloc[prod[0]]
@@ -130,9 +127,6 @@ class Session:
             self.products.loc[prod, "Counted"] = counted - count
 
             return True
-        else:
-            self.logger.error(f"Product: {sku} not found")
-            raise SessionException(f"Product: {sku} not found")
 
     def get_product(self, sku: str):
         self.logger.info(f"Getting product: {sku}")
@@ -140,6 +134,7 @@ class Session:
         prod = self.products[self.products['SKU'] == sku]
 
         if prod.empty:
+            self.logger.error(f"Product: {sku} not found")
             return None
 
         return prod.all
@@ -207,7 +202,6 @@ class Session:
                 self.variance_items.copy() if self.variance_counter >= 1 else self.products.copy()
             )
             print(f"Exported to: {file_name}")
-            self.logger.info(f"Exported to: {file_name}")
 
         except SessionException as e:
-            self.logger.error(e)
+            self.logger.exception(e)

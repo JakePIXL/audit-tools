@@ -1,4 +1,5 @@
 import logging
+from rich.logging import RichHandler
 import sys
 
 
@@ -9,16 +10,20 @@ def get_logger():
     file_handler = logging.FileHandler('audit_tools.log', mode='w')
     file_handler.setLevel(logging.DEBUG)
 
-    stream_handler = logging.StreamHandler(stream=sys.stdout)
-    stream_handler.setLevel(logging.INFO)
+    rich_handler = RichHandler(rich_tracebacks=True)
 
-    formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s | (%(filename)s:%(lineno)s) |\n',
-                                  datefmt='%Y-%m-%d | %H:%M:%S')
+    #stream_handler = logging.StreamHandler(stream=sys.stdout)
+    #stream_handler.setLevel(logging.INFO)
+
+    formatter = logging.Formatter(
+        '%(asctime)s | %(levelname)s | (%(filename)s:%(lineno)s via %(funcName)s) | %(message)s\n',
+        datefmt='%Y-%m-%d | %H:%M:%S'
+    )
 
     file_handler.setFormatter(formatter)
-    stream_handler.setFormatter(formatter)
+    #stream_handler.setFormatter(formatter)
 
     logger.addHandler(file_handler)
-    logger.addHandler(stream_handler)
+    logger.addHandler(rich_handler)
 
     return logger

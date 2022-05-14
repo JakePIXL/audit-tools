@@ -1,3 +1,4 @@
+import logging
 import sys
 
 from rich.prompt import Prompt, Confirm
@@ -6,6 +7,8 @@ from rich import print
 from audit_tools.core.errors import SessionException
 from audit_tools.core.utils import clear
 from audit_tools.core.session import Session
+
+log = logging.getLogger('audit_tools')
 
 
 class Scanner:
@@ -18,12 +21,12 @@ class Scanner:
 
         scanning = True
         while scanning:
-            self.session.logger.info("Scanner: Scanning...")
+            log.info("Scanner: Scanning...")
 
             sku = Prompt.ask("> Enter [bold green]SKU")
 
             if sku == "" or sku == " " or not sku:
-                self.session.logger.info("Scanner: Stopped")
+                log.info("Scanner: Stopped")
                 break
 
             try:
@@ -43,21 +46,21 @@ class Scanner:
                             try:
                                 self.session.count_product(sku, count)
                             except SessionException as e:
-                                self.session.logger.error(e)
+                                log.error(e)
                                 print(f"\t> [bold red]{e}")
                             break
 
                     except ValueError:
-                        self.session.logger.error("Scanner: Invalid count")
+                        log.error("Scanner: Invalid count")
                         continue
 
     def shutdown(self):
-        self.session.logger.info("Scanner is shutting down...")
+        log.info("Scanner is shutting down...")
 
         self.session.parse_session_data()
 
         while self.session.missed_counter > 0:
-            self.session.logger.warning(f"[bold orange] {self.session.missed_counter} missed products...")
+            log.warning(f"[bold orange] {self.session.missed_counter} missed products...")
             print(f"> [bold orange]You may have missed items!")
             print(self.session.get_table_data(self.session.missed_items))
             answer = Confirm.ask("> [bold orange]Would you like to count them?", default=True)

@@ -15,9 +15,6 @@ def export_file(file_type: str, folder_path: Optional[str], file: pd.DataFrame, 
     Export a file to the current or specified directory.
     """
 
-    if file.empty:
-        raise SessionException("Invalid file type!")
-
     date_time = datetime.datetime.now().strftime("%Y-%m-%d")
     file_name = f"audit-{date_time}.{file_type}"
 

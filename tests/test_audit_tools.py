@@ -1,5 +1,6 @@
 import pytest
 
+from audit_tools.core.errors import SessionException
 from audit_tools.sessionmanager import SessionManager
 from audit_tools.core.utils import export_file, import_file
 
@@ -8,6 +9,9 @@ def test_session_manager():
 
     with SessionManager(testing=True) as session:
         assert session is not None
+
+        with pytest.raises(SessionException):
+            session.shutdown()
 
         session.import_data("test_file.csv")
 
@@ -24,6 +28,10 @@ def test_session_manager():
         assert session.get_table_data().columns
         assert session.get_table_data(session.variance_items).columns
         assert session.get_table_data(session.missed_items).columns
+
+        session.shutdown()
+
+        return
 
 
 def test_file_manager():

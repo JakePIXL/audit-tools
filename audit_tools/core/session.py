@@ -12,10 +12,13 @@ columns_main = ["Counted", "Variance"]
 
 
 class Session:
-    def __init__(self, file_path: Optional[str] = None):
+    def __init__(self, file_path: Optional[str] = None, testing: bool = False):
         self.variance_counter = 0
         self.missed_counter = 0
         self.logger = get_logger()
+
+        if testing:
+            self.logger.warning("Testing mode enabled")
 
         self.logger.info("Session initialized")
 
@@ -36,6 +39,7 @@ class Session:
                 self.logger.exception(e)
                 sys.exit(1)
         else:
+            self.logger.warning("No file path provided while creating new session")
             self.file_type = "csv"
 
         self.logger.info("Creating alternative data structures")
@@ -190,6 +194,14 @@ class Session:
 
         :param file_folder: When provided the file will be saved to the given folder
         """
+
+        if self.products.empty:
+            self.logger.error("No products found in session")
+            raise SessionException("No products found in session")
+
+        if self.variance_items.empty:
+            self.logger.error("No product variances in session")
+            raise SessionException("No variance found in session")
 
         if self.variance_counter >= 1:
             print(f"{self.variance_counter} products have a variance!")
